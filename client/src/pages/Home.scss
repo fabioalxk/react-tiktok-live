@@ -1,0 +1,98 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #1c1c1c;
+  color: white;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.vote-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h2 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.ranking-text {
+  font-size: 50px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+.option-type-text {
+  font-size: 50px;
+}
+
+.vote-cards {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.vote-card {
+  padding: 20px;
+  border-radius: 10px;
+  width: 30%;
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+}
+
+.option-1 {
+  background-color: #228b22; // Verde escuro
+}
+
+.option-2 {
+  background-color: #8b0000; // Vermelho escuro
+}
+
+.ranking-container {
+  flex: 3; // O ranking ocupa 70% da tela
+  background-color: #001f3f; // Azul escuro
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.tables-container {
+  display: flex;
+  justify-content: space-evenly; // Mesma distância entre as tabelas
+  width: 100%;
+}
+
+table {
+  width: 45%; // Cada tabela ocupa 45% da tela
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid white;
+  padding: 10px;
+  text-align: center;
+  font-size: 34px;
+}
+
+th {
+  background-color: #003366; // Azul mais escuro para cabeçalho
+}
+
+td {
+  background-color: #002244; // Azul escuro para células
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
