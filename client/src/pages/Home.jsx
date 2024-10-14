@@ -1,100 +1,169 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.scss";
 
 function Home() {
-  // Mock de votos
-  const votes = [
-    { option: "Opção 1", votes: 22 },
-    { option: "Opção 2", votes: 30 },
-  ];
+  const [quizActive, setQuizActive] = useState(false);
+  const [quizCorrectAnswer, setQuizCorrectAnswer] = useState(null);
+  const [userScores, setUserScores] = useState({});
+  const [ranking, setRanking] = useState([]);
+  const [votes, setVotes] = useState({ option1: 0, option2: 0 }); // Estado para armazenar os votos
+  const [usersVoted, setUsersVoted] = useState(new Set()); // Armazena os usuários que votaram
 
-  // Mock de ranking (coloquei apenas 12, mas será preenchido até 20)
-  const ranking = [
-    { position: 1, user: "usuario3", points: 150 },
-    { position: 2, user: "usuario1", points: 120 },
-    { position: 3, user: "usuario4", points: 100 },
-    { position: 4, user: "usuario5", points: 95 },
-    { position: 5, user: "usuario6", points: 90 },
-    { position: 6, user: "usuario7", points: 85 },
-    { position: 7, user: "usuario8", points: 80 },
-    { position: 8, user: "usuario9", points: 75 },
-    { position: 9, user: "usuario10", points: 70 },
-    { position: 10, user: "usuario11", points: 65 },
-    { position: 11, user: "usuario12", points: 60 },
-    { position: 12, user: "usuario13", points: 55 },
-  ];
+  useEffect(() => {
+    // Pega o liveId da URL (query param)
+    const query = new URLSearchParams(window.location.search);
+    const liveId = query.get("liveId"); // Exemplo: ?liveId=@fabioalxk
 
-  const filledRanking = [...ranking];
-  while (filledRanking.length < 20) {
-    filledRanking.push({
-      position: filledRanking.length + 1,
-      user: "-",
-      points: "-",
+    if (liveId) {
+      // Estabelece a conexão WebSocket com o servidor Node.js
+      const ws = new WebSocket(`ws://localhost:3000`);
+
+      ws.onopen = () => {
+        console.log("Conectado ao WebSocket");
+        ws.send(liveId); // Envia o liveId para o servidor
+      };
+
+      ws.onmessage = (message) => {
+        const data = JSON.parse(message.data);
+
+        if (data.type === "chat" && quizActive) {
+          let userResponse = data.comment.trim();
+          if (userResponse === "1" || userResponse === "2") {
+            processUserResponse(data.uniqueId, userResponse); // Captura userId e o voto
+          }
+        }
+      };
+    }
+  }, [quizActive]);
+
+  // Função para processar a resposta do usuário
+  function processUserResponse(userId, response) {
+    // Verifica se o usuário já votou neste quiz
+    if (usersVoted.has(userId)) {
+      console.log(`Usuário ${userId} já votou neste quiz.`);
+      return;
+    }
+
+    // Marca o usuário como tendo votado
+    setUsersVoted((prevVoted) => new Set(prevVoted).add(userId));
+
+    // Inicializa o usuário no ranking se ele ainda não existir
+    setUserScores((prevScores) => {
+      const newScores = { ...prevScores };
+      if (!newScores[userId]) {
+        newScores[userId] = { userId: userId, score: 0 }; // Inicializa com 0 pontos
+      }
+      return newScores;
     });
+
+    // Atualiza os votos dinamicamente
+    if (response === "1") {
+      setVotes((prevVotes) => ({
+        ...prevVotes,
+        option1: prevVotes.option1 + 1,
+      }));
+    } else if (response === "2") {
+      setVotes((prevVotes) => ({
+        ...prevVotes,
+        option2: prevVotes.option2 + 1,
+      }));
+    }
   }
 
-  const firstHalf = filledRanking.slice(0, 10);
-  const secondHalf = filledRanking.slice(10, 20);
+  // Função para abrir o Quiz
+  function openQuiz() {
+    setQuizActive(true);
+    setQuizCorrectAnswer(null);
+    setVotes({ option1: 0, option2: 0 }); // Reiniciar os votos quando o quiz abre
+    setUsersVoted(new Set()); // Limpa os usuários que votaram no quiz anterior
+    document.getElementById("quizStatus").textContent =
+      "Quiz aberto! Digite 1 para aceitar o truco ou 2 para correr!";
+  }
+
+  // Função para fechar o Quiz com a resposta correta
+  function closeQuiz(correctAnswer) {
+    setQuizActive(false);
+    setQuizCorrectAnswer(correctAnswer);
+    document.getElementById(
+      "quizStatus"
+    ).textContent = `Quiz encerrado! A resposta correta foi ${correctAnswer}.`;
+
+    // Atualiza os pontos dos usuários que acertaram
+    const updatedScores = { ...userScores };
+    usersVoted.forEach((userId) => {
+      if (correctAnswer && userScores[userId]) {
+        if (userScores[userId].lastVote === correctAnswer) {
+          updatedScores[userId].score++; // Incrementa a pontuação dos que acertaram
+        }
+      }
+    });
+
+    setUserScores(updatedScores);
+    updateRanking(); // Atualiza o ranking após o encerramento do quiz
+  }
+
+  // Função para atualizar o ranking após o quiz
+  function updateRanking() {
+    const rankingArray = Object.values(userScores).sort(
+      (a, b) => b.score - a.score
+    );
+    setRanking(rankingArray);
+  }
 
   return (
     <div className="home-container">
+      {/* Parte de cima com as opções */}
       <div className="vote-container">
-        <h2 className="option-type-text">Digite uma das opções no chat:</h2>
+        <h2>Digite uma das opções no chat:</h2>
         <div className="vote-cards">
           <div className="vote-card option-1">
-            {votes[0].option}
+            Opção 1 - Aceitar Truco
             <br />
-            {votes[0].votes} votos
+            {votes.option1} votos
           </div>
           <div className="vote-card option-2">
-            {votes[1].option}
+            Opção 2 - Correr
             <br />
-            {votes[1].votes} votos
+            {votes.option2} votos
           </div>
         </div>
       </div>
 
-      <div className="ranking-container">
-        <h3 className="ranking-text">Ranking</h3>
-        <div className="tables-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Posição</th>
-                <th>Usuário</th>
-                <th>Pontos</th>
-              </tr>
-            </thead>
-            <tbody>
-              {firstHalf.map((user, index) => (
-                <tr key={index}>
-                  <td>{user.position}</td>
-                  <td>{user.user}</td>
-                  <td>{user.points}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Controles do operador */}
+      <div id="quizControls">
+        <button onClick={openQuiz}>Abrir Quiz</button>
+        <button onClick={() => closeQuiz("1")}>Encerrar com Resposta 1</button>
+        <button onClick={() => closeQuiz("2")}>Encerrar com Resposta 2</button>
+        <p id="quizStatus">Aguardando início do quiz...</p>
+      </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Posição</th>
-                <th>Usuário</th>
-                <th>Pontos</th>
-              </tr>
-            </thead>
-            <tbody>
-              {secondHalf.map((user, index) => (
+      {/* Parte de baixo com o ranking */}
+      <div className="ranking-container">
+        <h3>Ranking dos Participantes</h3>
+        <table id="rankingTable">
+          <thead>
+            <tr>
+              <th>Posição</th>
+              <th>Usuário</th>
+              <th>Pontuação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ranking.length > 0 ? (
+              ranking.map((user, index) => (
                 <tr key={index}>
-                  <td>{user.position}</td>
-                  <td>{user.user}</td>
-                  <td>{user.points}</td>
+                  <td>{index + 1}</td>
+                  <td>{user.userId}</td>
+                  <td>{user.score}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3">Nenhum usuário votou ainda.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
