@@ -1,69 +1,130 @@
-// Importações em ESM
 import express from "express";
-import { WebSocketServer } from "ws"; // Importando WebSocket para ESM
-import { WebcastPushConnection } from "tiktok-live-connector"; // Importando TikTok connector para ESM
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { WebcastPushConnection } from "tiktok-live-connector";
+import dotenv from "dotenv";
+import cors from "cors";
 
-// Inicializa o servidor Express
+dotenv.config();
+
 const app = express();
 const port = 3000;
+const httpServer = createServer(app);
 
-// Inicializa o WebSocket Server
-const wss = new WebSocketServer({ noServer: true });
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+);
 
-let tiktokConnection = null; // Para armazenar a conexão com o TikTok
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+  transports: ["websocket"],
+});
 
-// Configura o WebSocket Server
-wss.on("connection", (ws) => {
-  console.log("Cliente conectado ao WebSocket");
+const liveId = process.env.LIVE_ID;
 
-  ws.on("message", (message) => {
-    const liveId = message.toString(); // O ID da live enviado pelo frontend
+if (!liveId) {
+  console.error("Error: LIVE_ID is missing from env variables.");
+  process.exit(1);
+}
 
-    // Conecta ao TikTok Live usando o tiktok-live-connector
-    tiktokConnection = new WebcastPushConnection(liveId);
+let tiktokConnection = null;
 
-    tiktokConnection
-      .connect()
-      .then((state) => {
-        console.log(`Conectado à live de TikTok: ${liveId}`);
+const startTikTokConnection = () => {
+  tiktokConnection = new WebcastPushConnection(liveId);
 
-        // Escuta eventos de mensagens de chat
-        tiktokConnection.on("chat", (data) => {
-          // Envia as mensagens de chat para o cliente via WebSocket
-          console.log(`${data.uniqueId} writes: ${data.comment}`);
-          ws.send(
-            JSON.stringify({
-              type: "chat",
-              uniqueId: data.uniqueId,
-              comment: data.comment,
-            })
-          );
+  tiktokConnection
+    .connect()
+    .then((state) => {
+      console.log(`Connected to a live in TikTok: ${liveId}`);
+
+      tiktokConnection.on("chat", (data) => {
+        console.log(`${data.uniqueId} escreve: ${data.comment}`);
+
+        io.emit("chat", {
+          uniqueId: data.uniqueId,
+          comment: data.comment,
         });
-      })
-      .catch((err) => {
-        console.error("Erro ao conectar ao TikTok Live:", err);
-        ws.send(JSON.stringify({ error: "Erro ao conectar ao TikTok Live" }));
       });
-  });
+    })
+    .catch((err) => {
+      console.error("Erro ao conectar ao TikTok Live:", err);
+    });
+};
 
-  ws.on("close", () => {
-    console.log("Cliente desconectado");
+startTikTokConnection();
+
+io.on("connection", (socket) => {
+  console.log("Client connected to Socket.IO");
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
   });
 });
 
-// Rota simples para o Express
+// Rota simples para testar o servidor
 app.get("/", (req, res) => {
-  res.send("Servidor WebSocket rodando...");
+  res.send("Server Socket.IO running...");
 });
 
-// Inicia o servidor HTTP com WebSocket
-const server = app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-});
-
-// Habilita o WebSocket para o servidor HTTP
-server.on("upgrade", (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request);
+app.get("/emit1", (req, res) => {
+  console.log("emit1", req.query.user);
+  io.emit("chat", {
+    uniqueId: req.query.user,
+    comment: "1",
   });
+  return res.send(`
+    <html>
+      <head>
+        <style>
+          body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Emit 1 Response</h1>
+        <p>uniqueId: "fabio"</p>
+        <p>comment: "1"</p>
+      </body>
+    </html>
+  `);
+});
+
+app.get("/emit2", (req, res) => {
+  console.log("emit2");
+  io.emit("chat", {
+    uniqueId: "fabio",
+    comment: "2",
+  });
+  return res.send(`
+    <html>
+      <head>
+        <style>
+          body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Emit 1 Response</h1>
+        <p>uniqueId: "fabio"</p>
+        <p>comment: "2"</p>
+      </body>
+    </html>
+  `);
+});
+
+// Inicia o servidor HTTP
+httpServer.listen(port, () => {
+  console.log(`Server listening on port: ${port}`);
 });
