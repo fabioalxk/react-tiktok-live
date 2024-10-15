@@ -22,9 +22,10 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build -w client",
+    "heroku-postbuild": "npm run build -w client",
     "server": "npm start -w server",
     "client": "npm start -w client",
-    "start": "npm start -w server"
+    "start": "npm run build && npm run server"
   },
   "type": "module",
   "version": "1.0.0"

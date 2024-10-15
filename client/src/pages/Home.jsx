@@ -53,13 +53,11 @@ function Home() {
     setUsersVotes((prevVoted) => {
       if (prevVoted.hasOwnProperty(userId)) {
         console.log(`User already ${userId} voted`);
-        return prevVoted; // se o usuário já votou, retornamos o estado anterior
+        return prevVoted;
       }
 
-      // Atualiza o estado com o novo voto
       const updatedVotes = { ...prevVoted, [userId]: userVote };
 
-      // Atualiza os scores de usuários (adicione isso aqui para garantir que o estado atualizado seja usado)
       setUserScores((prevScores) => {
         const newScores = { ...prevScores };
         if (!newScores[userId]) {
@@ -68,7 +66,6 @@ function Home() {
         return newScores;
       });
 
-      // Atualiza o número de votos
       if (userVote === "1") {
         setNumberOfVotes((prevVotes) => ({
           ...prevVotes,
@@ -81,7 +78,7 @@ function Home() {
         }));
       }
 
-      return updatedVotes; // retorna o novo estado atualizado
+      return updatedVotes;
     });
   }
 
@@ -121,6 +118,22 @@ function Home() {
     );
     setRanking(rankingArray);
   }
+
+  const renderTable = (start, end) => {
+    const tableData = ranking.slice(start, end);
+    const placeholders = new Array(end - start - tableData.length).fill({
+      userId: "-",
+      score: "-",
+    });
+
+    return [...tableData, ...placeholders].map((user, index) => (
+      <tr key={index}>
+        <td>{start + index + 1}</td>
+        <td>{user.userId}</td>
+        <td>{user.score}</td>
+      </tr>
+    ));
+  };
 
   return (
     <div className="home-container">
@@ -172,31 +185,30 @@ function Home() {
       )}
 
       <div className="ranking-container">
-        <h3>Ranking dos Participantes</h3>
-        <table id="rankingTable">
-          <thead>
-            <tr>
-              <th>Posição</th>
-              <th>Usuário</th>
-              <th>Pontuação</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ranking.length > 0 ? (
-              ranking.map((user, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{user.userId}</td>
-                  <td>{user.score}</td>
-                </tr>
-              ))
-            ) : (
+        <h3 className="ranking-title">Ranking dos Participantes</h3>
+        <div className="tables-container">
+          <table className="ranking-table">
+            <thead>
               <tr>
-                <td colSpan="3">Nenhum usuário votou ainda.</td>
+                <th>Posição</th>
+                <th>Usuário</th>
+                <th>Pontuação</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>{renderTable(0, 10)}</tbody>
+          </table>
+
+          <table className="ranking-table">
+            <thead>
+              <tr>
+                <th>Posição</th>
+                <th>Usuário</th>
+                <th>Pontuação</th>
+              </tr>
+            </thead>
+            <tbody>{renderTable(10, 20)}</tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
