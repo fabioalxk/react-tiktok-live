@@ -189,7 +189,7 @@ function Quiz() {
             )}
             <div className="cancel-button-container">
               <button className="cancel-button" onClick={cancelQuiz}>
-                Cancelar
+                Voltar
               </button>
             </div>
           </>
