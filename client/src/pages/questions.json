@@ -23,5 +23,335 @@
     "question": "Qual o país conhecido como 'terra do sol nascente'?",
     "options": ["China", "Japão", "Coreia do Sul", "Tailândia"],
     "correctAnswer": "Japão"
+  },
+  {
+    "question": "Qual é o país mais populoso do mundo?",
+    "options": ["Índia", "Estados Unidos", "Brasil", "China"],
+    "correctAnswer": "China"
+  },
+  {
+    "question": "Quem é o criador do personagem Harry Potter?",
+    "options": [
+      "J.R.R. Tolkien",
+      "C.S. Lewis",
+      "J.K. Rowling",
+      "George R.R. Martin"
+    ],
+    "correctAnswer": "J.K. Rowling"
+  },
+  {
+    "question": "Qual cantor pop é conhecido como 'Rei do Pop'?",
+    "options": ["Elton John", "Michael Jackson", "Prince", "Justin Bieber"],
+    "correctAnswer": "Michael Jackson"
+  },
+  {
+    "question": "Quem foi a atriz principal de 'Titanic' ao lado de Leonardo DiCaprio?",
+    "options": [
+      "Kate Winslet",
+      "Julia Roberts",
+      "Sandra Bullock",
+      "Nicole Kidman"
+    ],
+    "correctAnswer": "Kate Winslet"
+  },
+  {
+    "question": "Qual é a maior floresta tropical do mundo?",
+    "options": [
+      "Floresta Amazônica",
+      "Floresta Negra",
+      "Taiga",
+      "Floresta do Congo"
+    ],
+    "correctAnswer": "Floresta Amazônica"
+  },
+  {
+    "question": "Qual ator interpretou o Homem de Ferro no Universo Cinematográfico Marvel?",
+    "options": [
+      "Robert Downey Jr.",
+      "Chris Hemsworth",
+      "Chris Evans",
+      "Mark Ruffalo"
+    ],
+    "correctAnswer": "Robert Downey Jr."
+  },
+  {
+    "question": "Quem é o presidente dos Estados Unidos em 2021?",
+    "options": ["Joe Biden", "Donald Trump", "Barack Obama", "George W. Bush"],
+    "correctAnswer": "Joe Biden"
+  },
+  {
+    "question": "Qual país é famoso por suas tulipas e moinhos de vento?",
+    "options": ["Alemanha", "França", "Holanda", "Suíça"],
+    "correctAnswer": "Holanda"
+  },
+  {
+    "question": "Em que ano ocorreu a queda do Muro de Berlim?",
+    "options": ["1989", "1979", "1999", "1969"],
+    "correctAnswer": "1989"
+  },
+  {
+    "question": "Quem interpretou a Mulher Maravilha no filme de 2017?",
+    "options": [
+      "Scarlett Johansson",
+      "Gal Gadot",
+      "Brie Larson",
+      "Margot Robbie"
+    ],
+    "correctAnswer": "Gal Gadot"
+  },
+  {
+    "question": "Quem traiu Selena Gomez e começou um relacionamento com Hailey Baldwin?",
+    "options": ["Justin Bieber", "Shawn Mendes", "The Weeknd", "Nick Jonas"],
+    "correctAnswer": "Justin Bieber"
+  },
+  {
+    "question": "Qual o menor país do mundo em termos de área?",
+    "options": ["Mônaco", "Vaticano", "San Marino", "Andorra"],
+    "correctAnswer": "Vaticano"
+  },
+  {
+    "question": "Qual é o maior mamífero do mundo?",
+    "options": ["Elefante", "Baleia Azul", "Rinoceronte", "Girafa"],
+    "correctAnswer": "Baleia Azul"
+  },
+  {
+    "question": "Quem interpretou o Coringa em 'O Cavaleiro das Trevas'?",
+    "options": [
+      "Heath Ledger",
+      "Joaquin Phoenix",
+      "Jared Leto",
+      "Jack Nicholson"
+    ],
+    "correctAnswer": "Heath Ledger"
+  },
+  {
+    "question": "Qual é o rio mais longo do mundo?",
+    "options": ["Nilo", "Amazonas", "Yangtze", "Mississippi"],
+    "correctAnswer": "Nilo"
+  },
+  {
+    "question": "Qual filme ganhou o Oscar de Melhor Filme em 2020?",
+    "options": ["1917", "Coringa", "Parasita", "Era Uma Vez em Hollywood"],
+    "correctAnswer": "Parasita"
+  },
+  {
+    "question": "Qual grupo feminino fez sucesso mundial com a música 'Wannabe'?",
+    "options": ["Spice Girls", "Destiny's Child", "Little Mix", "The Supremes"],
+    "correctAnswer": "Spice Girls"
+  },
+  {
+    "question": "Em qual cidade brasileira está localizada a maior floresta urbana do mundo?",
+    "options": ["São Paulo", "Rio de Janeiro", "Curitiba", "Manaus"],
+    "correctAnswer": "Rio de Janeiro"
+  },
+  {
+    "question": "Qual ator interpretou Jack Sparrow em 'Piratas do Caribe'?",
+    "options": ["Johnny Depp", "Orlando Bloom", "Keanu Reeves", "Brad Pitt"],
+    "correctAnswer": "Johnny Depp"
+  },
+  {
+    "question": "Qual país é famoso por sua Torre Eiffel?",
+    "options": ["Itália", "Espanha", "França", "Alemanha"],
+    "correctAnswer": "França"
+  },
+  {
+    "question": "Quem é o autor do clássico 'O Pequeno Príncipe'?",
+    "options": [
+      "Antoine de Saint-Exupéry",
+      "Victor Hugo",
+      "Marcel Proust",
+      "Jules Verne"
+    ],
+    "correctAnswer": "Antoine de Saint-Exupéry"
+  },
+  {
+    "question": "Quem foi o primeiro presidente dos Estados Unidos?",
+    "options": [
+      "George Washington",
+      "Thomas Jefferson",
+      "Abraham Lincoln",
+      "John Adams"
+    ],
+    "correctAnswer": "George Washington"
+  },
+  {
+    "question": "Qual cantora pop lançou o álbum '1989'?",
+    "options": ["Katy Perry", "Lady Gaga", "Taylor Swift", "Dua Lipa"],
+    "correctAnswer": "Taylor Swift"
+  },
+  {
+    "question": "Qual é a moeda oficial do Japão?",
+    "options": ["Dólar", "Euro", "Iene", "Yuan"],
+    "correctAnswer": "Iene"
+  },
+  {
+    "question": "Quem interpretou a Viúva Negra nos filmes da Marvel?",
+    "options": [
+      "Scarlett Johansson",
+      "Elizabeth Olsen",
+      "Brie Larson",
+      "Margot Robbie"
+    ],
+    "correctAnswer": "Scarlett Johansson"
+  },
+  {
+    "question": "Em que ano o Brasil foi descoberto pelos portugueses?",
+    "options": ["1500", "1600", "1700", "1400"],
+    "correctAnswer": "1500"
+  },
+  {
+    "question": "Qual é o nome da rainha do Reino Unido que governou por mais de 70 anos?",
+    "options": ["Elizabeth I", "Elizabeth II", "Victoria", "Mary"],
+    "correctAnswer": "Elizabeth II"
+  },
+  {
+    "question": "Quem é o personagem principal de 'O Senhor dos Anéis'?",
+    "options": ["Frodo Baggins", "Aragorn", "Legolas", "Gandalf"],
+    "correctAnswer": "Frodo Baggins"
+  },
+  {
+    "question": "Quem foi o vilão principal no filme 'Vingadores: Guerra Infinita'?",
+    "options": ["Loki", "Thanos", "Ultron", "Zemo"],
+    "correctAnswer": "Thanos"
+  },
+  {
+    "question": "Em qual esporte Pelé se destacou?",
+    "options": ["Basquete", "Futebol", "Tênis", "Vôlei"],
+    "correctAnswer": "Futebol"
+  },
+  {
+    "question": "Qual é o maior continente em termos de área?",
+    "options": ["Ásia", "África", "América do Sul", "Europa"],
+    "correctAnswer": "Ásia"
+  },
+  {
+    "question": "Qual cantora fez sucesso com a música 'Rolling in the Deep'?",
+    "options": ["Adele", "Beyoncé", "Lady Gaga", "Shakira"],
+    "correctAnswer": "Adele"
+  },
+  {
+    "question": "Qual o idioma oficial do Brasil?",
+    "options": ["Português", "Espanhol", "Inglês", "Francês"],
+    "correctAnswer": "Português"
+  },
+  {
+    "question": "Quem é o autor da série de livros 'As Crônicas de Nárnia'?",
+    "options": [
+      "J.R.R. Tolkien",
+      "George R.R. Martin",
+      "C.S. Lewis",
+      "Philip Pullman"
+    ],
+    "correctAnswer": "C.S. Lewis"
+  },
+  {
+    "question": "Em que cidade brasileira fica a maior usina hidrelétrica do mundo?",
+    "options": ["Belo Horizonte", "Curitiba", "Foz do Iguaçu", "Manaus"],
+    "correctAnswer": "Foz do Iguaçu"
+  },
+  {
+    "question": "Quem foi a atriz que interpretou Hermione Granger em 'Harry Potter'?",
+    "options": [
+      "Emma Watson",
+      "Kristen Stewart",
+      "Natalie Portman",
+      "Emma Stone"
+    ],
+    "correctAnswer": "Emma Watson"
+  },
+  {
+    "question": "Qual país é famoso por seu muro milenar?",
+    "options": ["Japão", "Coreia do Sul", "Índia", "China"],
+    "correctAnswer": "China"
+  },
+  {
+    "question": "Quem foi o diretor do filme 'A Origem'?",
+    "options": [
+      "Christopher Nolan",
+      "Steven Spielberg",
+      "James Cameron",
+      "Quentin Tarantino"
+    ],
+    "correctAnswer": "Christopher Nolan"
+  },
+  {
+    "question": "Qual a primeira mulher a ganhar um Prêmio Nobel?",
+    "options": [
+      "Marie Curie",
+      "Rosalind Franklin",
+      "Ada Lovelace",
+      "Hedy Lamarr"
+    ],
+    "correctAnswer": "Marie Curie"
+  },
+  {
+    "question": "Quem foi o primeiro homem a pisar na Lua?",
+    "options": [
+      "Neil Armstrong",
+      "Buzz Aldrin",
+      "Yuri Gagarin",
+      "Michael Collins"
+    ],
+    "correctAnswer": "Neil Armstrong"
+  },
+  {
+    "question": "Quem é o criador do Facebook?",
+    "options": ["Elon Musk", "Bill Gates", "Mark Zuckerberg", "Jeff Bezos"],
+    "correctAnswer": "Mark Zuckerberg"
+  },
+  {
+    "question": "Qual grupo de K-pop ganhou fama mundial com o hit 'Dynamite'?",
+    "options": ["BLACKPINK", "BTS", "EXO", "TWICE"],
+    "correctAnswer": "BTS"
+  },
+  {
+    "question": "Qual país é conhecido por sua arquitetura de castelos e lagos?",
+    "options": ["Suíça", "Escócia", "Irlanda", "Noruega"],
+    "correctAnswer": "Escócia"
+  },
+  {
+    "question": "Qual ator interpretou o personagem Neo em 'Matrix'?",
+    "options": ["Keanu Reeves", "Brad Pitt", "Tom Cruise", "Leonardo DiCaprio"],
+    "correctAnswer": "Keanu Reeves"
+  },
+  {
+    "question": "Qual é o menor osso do corpo humano?",
+    "options": ["Estribo", "Fêmur", "Rádio", "Tíbia"],
+    "correctAnswer": "Estribo"
+  },
+  {
+    "question": "Em qual filme o personagem principal é um robô chamado Wall-E?",
+    "options": ["Wall-E", "Toy Story", "Carros", "Procurando Nemo"],
+    "correctAnswer": "Wall-E"
+  },
+  {
+    "question": "Quem interpretou Thor nos filmes da Marvel?",
+    "options": [
+      "Chris Hemsworth",
+      "Tom Hiddleston",
+      "Chris Pratt",
+      "Chris Evans"
+    ],
+    "correctAnswer": "Chris Hemsworth"
+  },
+  {
+    "question": "Qual foi o primeiro filme da franquia Star Wars lançado?",
+    "options": [
+      "A Ameaça Fantasma",
+      "O Retorno de Jedi",
+      "Uma Nova Esperança",
+      "O Império Contra-Ataca"
+    ],
+    "correctAnswer": "Uma Nova Esperança"
+  },
+  {
+    "question": "Qual cantora ganhou destaque com o hit 'Single Ladies'?",
+    "options": ["Rihanna", "Beyoncé", "Katy Perry", "Shakira"],
+    "correctAnswer": "Beyoncé"
+  },
+  {
+    "question": "Qual país é famoso por sua tradição de samurais e cultura de anime?",
+    "options": ["Japão", "Coreia do Sul", "China", "Tailândia"],
+    "correctAnswer": "Japão"
   }
 ]
