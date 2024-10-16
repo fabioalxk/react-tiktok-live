@@ -79,9 +79,26 @@ const getRandomComment = () => {
   return Math.random() < 0.5 ? "1" : "2";
 };
 
+const getRandomCommentOnQuiz = () => {
+  return Math.floor(Math.random() * 4) + 1;
+};
+
 app.get("/emit", (req, res) => {
   users.forEach((user) => {
     const randomComment = getRandomComment();
+
+    io.emit("chat", {
+      uniqueId: user.uniqueId,
+      comment: randomComment,
+    });
+  });
+
+  return res.send("Emits sent to 500 users.");
+});
+
+app.get("/emit-quiz", (req, res) => {
+  users.forEach((user) => {
+    const randomComment = getRandomCommentOnQuiz().toString();
 
     io.emit("chat", {
       uniqueId: user.uniqueId,

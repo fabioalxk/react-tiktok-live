@@ -1,0 +1,27 @@
+[
+  {
+    "question": "Qual é a capital da França?",
+    "options": ["Paris", "Londres", "Berlim", "Roma"],
+    "correctAnswer": "Paris"
+  },
+  {
+    "question": "Qual é o planeta mais próximo do Sol?",
+    "options": ["Terra", "Vênus", "Marte", "Mercúrio"],
+    "correctAnswer": "Mercúrio"
+  },
+  {
+    "question": "Quem pintou a Mona Lisa?",
+    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Van Gogh"],
+    "correctAnswer": "Leonardo da Vinci"
+  },
+  {
+    "question": "Quantos estados tem o Brasil?",
+    "options": ["23", "24", "25", "26"],
+    "correctAnswer": "26"
+  },
+  {
+    "question": "Qual o país conhecido como 'terra do sol nascente'?",
+    "options": ["China", "Japão", "Coreia do Sul", "Tailândia"],
+    "correctAnswer": "Japão"
+  }
+]
