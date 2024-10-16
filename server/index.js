@@ -61,7 +61,7 @@ const startTikTokConnection = () => {
     });
 };
 
-// startTikTokConnection();
+startTikTokConnection();
 
 io.on("connection", (socket) => {
   console.log("Client connected to Socket.IO");

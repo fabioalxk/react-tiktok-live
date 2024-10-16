@@ -46,18 +46,6 @@ function Quiz() {
     };
   }, [quizActive, answerRevealed]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setIsTransitioning(true);
-  //     setTimeout(() => {
-  //       setCurrentTables((prev) => (prev + 1) % 2);
-  //       setIsTransitioning(false);
-  //     }, 500);
-  //   }, 6000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-
   function processUserResponse(userId, userVote) {
     setUsersVotes((prevVoted) => {
       if (prevVoted.hasOwnProperty(userId)) return prevVoted;
