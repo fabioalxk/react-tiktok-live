@@ -61,7 +61,7 @@ const startTikTokConnection = () => {
     });
 };
 
-startTikTokConnection();
+// startTikTokConnection();
 
 io.on("connection", (socket) => {
   console.log("Client connected to Socket.IO");
@@ -71,62 +71,31 @@ io.on("connection", (socket) => {
   });
 });
 
+const users = Array.from({ length: 500 }, (_, i) => ({
+  uniqueId: `user${i + 1}`,
+}));
+
+const getRandomComment = () => {
+  return Math.random() < 0.5 ? "1" : "2";
+};
+
+app.get("/emit", (req, res) => {
+  users.forEach((user) => {
+    const randomComment = getRandomComment();
+
+    io.emit("chat", {
+      uniqueId: user.uniqueId,
+      comment: randomComment,
+    });
+  });
+
+  return res.send("Emits sent to 500 users.");
+});
+
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
-});
-
-app.get("/emit1", (req, res) => {
-  console.log("emit1", req.query.user);
-  io.emit("chat", {
-    uniqueId: req.query.user,
-    comment: "1",
-  });
-  return res.send(`
-    <html>
-      <head>
-        <style>
-          body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>Emit 1 Response</h1>
-        <p>uniqueId: "fabio"</p>
-        <p>comment: "1"</p>
-      </body>
-    </html>
-  `);
-});
-
-app.get("/emit2", (req, res) => {
-  console.log("emit2");
-  io.emit("chat", {
-    uniqueId: "fabio",
-    comment: "2",
-  });
-  return res.send(`
-    <html>
-      <head>
-        <style>
-          body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>Emit 1 Response</h1>
-        <p>uniqueId: "fabio"</p>
-        <p>comment: "2"</p>
-      </body>
-    </html>
-  `);
 });
 
 // Inicia o servidor HTTP

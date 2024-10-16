@@ -13,6 +13,8 @@ function Home() {
   });
   const [usersVotes, setUsersVotes] = useState({});
   const [socket, setSocket] = useState(null);
+  const [currentTables, setCurrentTables] = useState(0); // Estado para controlar o grupo de tabelas
+  const [isTransitioning, setIsTransitioning] = useState(false); // Estado para controlar a transição
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000", {
@@ -25,14 +27,9 @@ function Home() {
     });
 
     newSocket.on("chat", (data) => {
-      console.log("chat event", {
-        usuario: data.uniqueId,
-        comment: data.comment,
-      });
-
       if (quizActive && data.comment) {
         let userResponse = data.comment?.trim();
-        if (userResponse == "1" || userResponse == "2") {
+        if (userResponse === "1" || userResponse === "2") {
           processUserResponse(data.uniqueId, userResponse);
         }
       }
@@ -44,17 +41,22 @@ function Home() {
     };
   }, [quizActive]);
 
-  function processUserResponse(userId, userVote) {
-    console.log("New valid userVote started to process...", {
-      userId,
-      userVote,
-    });
+  useEffect(() => {
+    // Alterna entre os grupos de tabelas a cada 10 segundos, com transição suave
+    const interval = setInterval(() => {
+      setIsTransitioning(true); // Inicia a transição
+      setTimeout(() => {
+        setCurrentTables((prev) => (prev + 1) % 2); // Alterna entre 0 e 1
+        setIsTransitioning(false); // Termina a transição após 0.5s
+      }, 500);
+    }, 10000);
 
+    return () => clearInterval(interval);
+  }, []);
+
+  function processUserResponse(userId, userVote) {
     setUsersVotes((prevVoted) => {
-      if (prevVoted.hasOwnProperty(userId)) {
-        console.log(`User already ${userId} voted`);
-        return prevVoted;
-      }
+      if (prevVoted.hasOwnProperty(userId)) return prevVoted;
 
       const updatedVotes = { ...prevVoted, [userId]: userVote };
 
@@ -87,7 +89,6 @@ function Home() {
     setQuizCorrectAnswer(null);
     setNumberOfVotes({ option1: 0, option2: 0 });
     setUsersVotes({});
-    console.log("Quiz is open. Users can vote");
   }
 
   function finishQuiz(correctAnswer) {
@@ -109,7 +110,6 @@ function Home() {
     setQuizActive(false);
     setNumberOfVotes({ option1: 0, option2: 0 });
     setUsersVotes({});
-    console.log("Quiz cancelled.");
   }
 
   function updateRanking() {
@@ -138,78 +138,117 @@ function Home() {
   return (
     <div className="home-container">
       <div className="vote-container">
-        <h2>Digite uma das opções no chat:</h2>
-        <div className="vote-cards">
-          {!quizActive && (
-            <div className="vote-card open-quiz" onClick={openQuiz}>
-              Abrir Quiz
-            </div>
-          )}
-          {quizActive && (
-            <>
+        {quizActive ? (
+          <>
+            <div className="vote-cards">
               <div
-                className="vote-card option-1"
+                className="vote-card option-1 large-card"
                 onClick={() => finishQuiz("1")}
               >
                 Opção 1
                 <br />
-                {numberOfVotes.option1} votos
+                <span>{numberOfVotes.option1} votos</span>{" "}
+                {/* Número de votos maior */}
               </div>
               <div
-                className="vote-card option-2"
+                className="vote-card option-2 large-card"
                 onClick={() => finishQuiz("2")}
               >
                 Opção 2
                 <br />
-                {numberOfVotes.option2} votos
+                <span>{numberOfVotes.option2} votos</span>{" "}
+                {/* Número de votos maior */}
               </div>
-            </>
-          )}
-        </div>
+            </div>
+            <div className="cancel-button-container">
+              <button className="cancel-button" onClick={cancelQuiz}>
+                Cancelar
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="open-quiz minimized" onClick={openQuiz}>
+            Abrir Quiz
+          </div>
+        )}
       </div>
 
-      {quizActive && (
-        <button
-          onClick={cancelQuiz}
-          style={{
-            marginTop: "10px",
-            backgroundColor: "#dc3545",
-            color: "white",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Cancelar Quiz
-        </button>
+      {!quizActive && (
+        <div className="ranking-container">
+          <h3 className="ranking-title">Ranking dos Participantes</h3>
+          <div
+            className={`tables-container ${isTransitioning ? "hidden" : ""}`}
+          >
+            {currentTables === 0 ? (
+              <>
+                <table className="ranking-table first-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(0, 10)}</tbody>
+                </table>
+                <table className="ranking-table first-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(10, 20)}</tbody>
+                </table>
+                <table className="ranking-table first-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(20, 30)}</tbody>
+                </table>
+              </>
+            ) : (
+              <>
+                <table className="ranking-table second-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(30, 40)}</tbody>
+                </table>
+                <table className="ranking-table second-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(40, 50)}</tbody>
+                </table>
+                <table className="ranking-table second-set">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Usuário</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>{renderTable(50, 60)}</tbody>
+                </table>
+              </>
+            )}
+          </div>
+        </div>
       )}
-
-      <div className="ranking-container">
-        <h3 className="ranking-title">Ranking dos Participantes</h3>
-        <div className="tables-container">
-          <table className="ranking-table">
-            <thead>
-              <tr>
-                <th>Posição</th>
-                <th>Usuário</th>
-                <th>Pontuação</th>
-              </tr>
-            </thead>
-            <tbody>{renderTable(0, 10)}</tbody>
-          </table>
-
-          <table className="ranking-table">
-            <thead>
-              <tr>
-                <th>Posição</th>
-                <th>Usuário</th>
-                <th>Pontuação</th>
-              </tr>
-            </thead>
-            <tbody>{renderTable(10, 20)}</tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 }
