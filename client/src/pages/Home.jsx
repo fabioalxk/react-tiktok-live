@@ -16,6 +16,7 @@ function Home() {
   const [socket, setSocket] = useState(null);
   const [currentTables, setCurrentTables] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000", {
@@ -100,6 +101,10 @@ function Home() {
     setUsersVotes({});
   }
 
+  function toggleMute() {
+    setIsMuted((prevMuted) => !prevMuted);
+  }
+
   function updateRanking() {
     const rankingArray = Object.values(userScores)?.sort(
       (a, b) => b.score - a.score
@@ -134,7 +139,18 @@ function Home() {
 
   return (
     <div className="home-container">
-      <MusicPlayer isQuizActive={quizActive} />
+      <MusicPlayer isQuizActive={quizActive} isMuted={isMuted} />
+      <div className="controls">
+        <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
+        {quizActive ? (
+          <button className="" onClick={cancelQuiz}>
+            Cancelar
+          </button>
+        ) : (
+          <button onClick={openQuiz}>Abrir Quiz</button>
+        )}
+      </div>
+
       <div className="vote-container">
         {quizActive ? (
           <>
@@ -156,11 +172,11 @@ function Home() {
                 <span>{numberOfVotes.option2} votos</span>{" "}
               </div>
             </div>
-            <div className="cancel-button-container">
+            {/* <div className="cancel-button-container">
               <button className="cancel-button" onClick={cancelQuiz}>
                 Cancelar
               </button>
-            </div>
+            </div> */}
           </>
         ) : (
           <div className="open-quiz minimized" onClick={openQuiz}>
