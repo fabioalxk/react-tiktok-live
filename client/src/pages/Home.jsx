@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./Home.scss";
+import MusicPlayer from "../components/MusicPlayer/MusicPlayer";
 
 function Home() {
   const [quizActive, setQuizActive] = useState(false);
@@ -13,8 +14,8 @@ function Home() {
   });
   const [usersVotes, setUsersVotes] = useState({});
   const [socket, setSocket] = useState(null);
-  const [currentTables, setCurrentTables] = useState(0); // Estado para controlar o grupo de tabelas
-  const [isTransitioning, setIsTransitioning] = useState(false); // Estado para controlar a transição
+  const [currentTables, setCurrentTables] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000", {
@@ -40,19 +41,6 @@ function Home() {
       newSocket.disconnect();
     };
   }, [quizActive]);
-
-  useEffect(() => {
-    // Alterna entre os grupos de tabelas a cada 10 segundos, com transição suave
-    const interval = setInterval(() => {
-      setIsTransitioning(true); // Inicia a transição
-      setTimeout(() => {
-        setCurrentTables((prev) => (prev + 1) % 2); // Alterna entre 0 e 1
-        setIsTransitioning(false); // Termina a transição após 0.5s
-      }, 500);
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   function processUserResponse(userId, userVote) {
     setUsersVotes((prevVoted) => {
@@ -135,8 +123,18 @@ function Home() {
     ));
   };
 
+  // Funções para navegação
+  const handleNextTable = () => {
+    if (currentTables < 1) setCurrentTables((prev) => prev + 1);
+  };
+
+  const handlePreviousTable = () => {
+    if (currentTables > 0) setCurrentTables((prev) => prev - 1);
+  };
+
   return (
     <div className="home-container">
+      <MusicPlayer isQuizActive={quizActive} />
       <div className="vote-container">
         {quizActive ? (
           <>
@@ -148,7 +146,6 @@ function Home() {
                 Opção 1
                 <br />
                 <span>{numberOfVotes.option1} votos</span>{" "}
-                {/* Número de votos maior */}
               </div>
               <div
                 className="vote-card option-2 large-card"
@@ -157,7 +154,6 @@ function Home() {
                 Opção 2
                 <br />
                 <span>{numberOfVotes.option2} votos</span>{" "}
-                {/* Número de votos maior */}
               </div>
             </div>
             <div className="cancel-button-container">
@@ -176,6 +172,20 @@ function Home() {
       {!quizActive && (
         <div className="ranking-container">
           <h3 className="ranking-title">Ranking dos Participantes</h3>
+
+          {/* Setas de Navegação */}
+          <div className="navigation-buttons">
+            <button
+              onClick={handlePreviousTable}
+              disabled={currentTables === 0}
+            >
+              {"<"}
+            </button>
+            <button onClick={handleNextTable} disabled={currentTables === 1}>
+              {">"}
+            </button>
+          </div>
+
           <div
             className={`tables-container ${isTransitioning ? "hidden" : ""}`}
           >
