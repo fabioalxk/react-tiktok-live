@@ -46,17 +46,17 @@ function Quiz() {
     };
   }, [quizActive, answerRevealed]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentTables((prev) => (prev + 1) % 2);
-        setIsTransitioning(false);
-      }, 500);
-    }, 6000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setIsTransitioning(true);
+  //     setTimeout(() => {
+  //       setCurrentTables((prev) => (prev + 1) % 2);
+  //       setIsTransitioning(false);
+  //     }, 500);
+  //   }, 6000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   function processUserResponse(userId, userVote) {
     setUsersVotes((prevVoted) => {
@@ -167,7 +167,7 @@ function Quiz() {
                       isCorrect ? "highlight-correct" : ""
                     }`}
                   >
-                    {optionText}
+                    Opção {optionNumber} - {optionText}
                     <br />
                     <span>{numberOfVotes[`option${optionNumber}`]} votos</span>
                   </div>
