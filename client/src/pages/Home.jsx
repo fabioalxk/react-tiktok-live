@@ -6,6 +6,8 @@ import QuizControl from "../components/quizControl/QuizControl";
 import VoteCards from "../components/voteCards/VoteCards";
 import RankingTable from "../components/rankingTable/RankingTable";
 import NavigationButtons from "../components/NavigationButtons/NavigationButtons";
+import GiftNotification from "../components/giftNotification/GiftNotification";
+import TopGiftGivers from "../components/topGiftGivers/TopGiftGivers";
 
 function Home() {
   const [quizActive, setQuizActive] = useState(false);
@@ -20,6 +22,9 @@ function Home() {
   const [socket, setSocket] = useState(null);
   const [currentTables, setCurrentTables] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [showRank, setShowRank] = useState(false);
+  const [gifts, setGifts] = useState([]);
+  const [topGivers, setTopGivers] = useState([]);
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000", {
@@ -38,6 +43,25 @@ function Home() {
           processUserResponse(data.uniqueId, userResponse);
         }
       }
+    });
+
+    newSocket.on("gift", (data) => {
+      console.log("data", data);
+      setGifts((prevGifts) => [...prevGifts, data]);
+
+      setTopGivers((prevGivers) => {
+        const updatedGivers = { ...prevGivers };
+        const currentGiver = updatedGivers[data.userId] || {
+          username: data.username,
+          giftCount: 0,
+        };
+        currentGiver.giftCount += data.giftCount;
+        updatedGivers[data.userId] = currentGiver;
+
+        return Object.values(updatedGivers)
+          .sort((a, b) => b.giftCount - a.giftCount)
+          .slice(0, 5);
+      });
     });
 
     return () => {
@@ -108,6 +132,10 @@ function Home() {
     setIsMuted((prevMuted) => !prevMuted);
   }
 
+  function toggleShowRank() {
+    setShowRank((prevShowRank) => !prevShowRank);
+  }
+
   function updateRanking() {
     const rankingArray = Object.values(userScores)?.sort(
       (a, b) => b.score - a.score
@@ -148,6 +176,7 @@ function Home() {
           openQuiz={openQuiz}
           cancelQuiz={cancelQuiz}
           toggleMute={toggleMute}
+          toggleShowRank={toggleShowRank}
           isMuted={isMuted}
         />
         <VoteCards
@@ -155,7 +184,7 @@ function Home() {
           finishQuiz={finishQuiz}
           numberOfVotes={numberOfVotes}
         />
-        {!quizActive && (
+        {!quizActive && showRank && (
           <>
             <RankingTable
               ranking={ranking}
@@ -170,7 +199,10 @@ function Home() {
           </>
         )}
       </div>
-      <div className="right-side"></div>
+      <div className="right-side">
+        <GiftNotification gifts={gifts} />
+        <TopGiftGivers topGivers={topGivers} />
+      </div>
     </div>
   );
 }

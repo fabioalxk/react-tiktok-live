@@ -1,0 +1,29 @@
+.gifts-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background: black;
+}
+
+.gifts-notifications,
+.top-gift-givers {
+  flex: 1;
+  margin: 0 10px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.gifts-notifications {
+  background-color: black;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.top-gift-givers {
+  background-color: black;
+  padding: 20px;
+  border-radius: 8px;
+}

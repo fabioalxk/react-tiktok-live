@@ -2,6 +2,28 @@
   display: flex;
   height: 100vh;
   width: 100vw;
+
+  .left-side {
+    width: 50%;
+    background-color: #001f3f;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #001f3f;
+  }
 }
 
 .ranking-container {
@@ -14,36 +36,41 @@
   border-radius: 10px;
   text-align: center;
   height: 100%;
+
+  table {
+    width: 45%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid white;
+    padding: 10px;
+    text-align: center;
+    font-size: 34px;
+  }
+
+  th {
+    background-color: #003366;
+  }
+
+  td {
+    background-color: #002244;
+  }
 }
 
 .tables-container {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 20px; /* Espaço entre as tabelas */
+  gap: 20px;
   height: auto;
   transition: opacity 0.5s ease-in-out;
-  padding: 0 20px; /* Adiciona padding lateral para garantir que as tabelas não toquem as bordas */
+  padding: 0 20px;
 }
 
 .tables-container.hidden {
   opacity: 0;
-}
-
-.left-side {
-  width: 50%;
-  background-color: #001f3f;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.right-side {
-  width: 50%;
-  background-color: black; /* Fundo preto sem conteúdo */
 }
 
 .vote-cards {
@@ -93,7 +120,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #222;
   padding: 20px;
   height: 100vh;
   position: relative;
@@ -148,27 +174,6 @@ h2 {
 .ranking-table td {
   background-color: #002244;
   color: white;
-}
-
-table {
-  width: 45%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  border: 1px solid white;
-  padding: 10px;
-  text-align: center;
-  font-size: 34px;
-}
-
-th {
-  background-color: #003366;
-}
-
-td {
-  background-color: #002244;
 }
 
 body {
@@ -252,4 +257,92 @@ body {
 .vote-card,
 .cancel-button {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.gift-notification {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 15px;
+  color: white;
+  box-sizing: border-box;
+}
+
+.gift-notification .gift-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.gift-notification .gift-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.gift-notification span {
+  font-size: 16px;
+  flex: 1;
+  color: white;
+}
+
+.top-gift-givers {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 15px;
+  color: white;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; // Organiza os elementos da tabela verticalmente
+}
+
+.top-gift-givers h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: white;
+  text-align: center;
+}
+
+.top-gift-givers table {
+  width: 100%;
+  border-collapse: collapse; // Remove espaços entre células
+  table-layout: fixed; // Faz com que a tabela use o espaço de forma consistente
+}
+
+.top-gift-givers table th,
+.top-gift-givers table td {
+  padding: 12px; // Espaçamento interno das células
+  text-align: left; // Alinhamento do texto à esquerda
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); // Linha discreta para separar as células
+}
+
+.top-gift-givers table th {
+  background-color: #003366;
+  color: white;
+  font-size: 18px;
+  text-align: left; // Ajusta o alinhamento dos títulos
+}
+
+.top-gift-givers table td {
+  background-color: #002244;
+  color: white;
+  font-size: 16px;
+  text-align: left;
+  overflow: hidden; // Evita que o conteúdo quebre a célula
+  white-space: nowrap; // Faz o texto ficar em uma única linha
+  text-overflow: ellipsis; // Adiciona "..." se o texto for muito grande
+}
+
+.top-gift-givers table td:first-child,
+.top-gift-givers table th:first-child {
+  width: 40%; // Ajusta a largura da coluna do nome
+}
+
+.top-gift-givers table td:last-child,
+.top-gift-givers table th:last-child {
+  width: 30%; // Ajusta a largura da coluna dos presentes
 }

@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateRandomGift } from "./randomGifts.js";
 
 dotenv.config();
 
@@ -59,6 +60,20 @@ const startTikTokConnection = () => {
     .catch((err) => {
       console.error("Erro ao conectar ao TikTok Live:", err);
     });
+
+  tiktokConnection.on("gift", (data) => {
+    console.log(`${data.uniqueId} enviou um presente: ${data.giftName}`);
+
+    io.emit("gift", {
+      userId: data.userId,
+      username: data.uniqueId,
+      giftName: data.giftName,
+      giftCount: data.repeatCount,
+      profilePictureUrl: data.profilePictureUrl,
+      giftPictureUrl: data.giftPictureUrl,
+      diamondCount: data.diamondCount,
+    });
+  });
 };
 
 // startTikTokConnection();
@@ -90,6 +105,15 @@ app.get("/emit", (req, res) => {
   });
 
   return res.send("Emits sent to 500 users.");
+});
+
+app.get("/emit-gifts", (req, res) => {
+  for (let i = 0; i < 100; i++) {
+    const randomGift = generateRandomGift();
+    io.emit("gift", randomGift);
+  }
+
+  return res.send("Emits de presentes enviados.");
 });
 
 app.use(express.static(path.join(__dirname, "../client/dist")));

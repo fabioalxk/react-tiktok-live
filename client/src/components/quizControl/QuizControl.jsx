@@ -5,6 +5,7 @@ function QuizControl({
   openQuiz,
   cancelQuiz,
   toggleMute,
+  toggleShowRank,
   isMuted,
 }) {
   return (
@@ -15,6 +16,7 @@ function QuizControl({
       ) : (
         <button onClick={openQuiz}>Abrir Quiz</button>
       )}
+      <button onClick={toggleShowRank}>Show Rank</button>
     </div>
   );
 }
