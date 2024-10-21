@@ -15,9 +15,6 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
     "/assets/songs/crucial/song1.mp3",
     "/assets/songs/crucial/song2.mp3",
     "/assets/songs/crucial/song3.mp3",
-    "/assets/songs/crucial/song4.mp3",
-    "/assets/songs/crucial/song5.mp3",
-    "/assets/songs/crucial/song6.mp3",
   ];
 
   const [currentSongs, setCurrentSongs] = useState(defaultSongs);
@@ -26,6 +23,7 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
   const playRandomSong = () => {
     const randomIndex = Math.floor(Math.random() * currentSongs.length);
     if (audioRef.current) {
+      console.log("currentSongs[randomIndex]", currentSongs[randomIndex]);
       audioRef.current.src = currentSongs[randomIndex];
       audioRef.current.play();
     }

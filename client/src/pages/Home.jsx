@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./Home.scss";
 import MusicPlayer from "../components/MusicPlayer/MusicPlayer";
+import QuizControl from "../components/quizControl/QuizControl";
+import VoteCards from "../components/voteCards/VoteCards";
+import RankingTable from "../components/rankingTable/RankingTable";
+import NavigationButtons from "../components/NavigationButtons/NavigationButtons";
 
 function Home() {
   const [quizActive, setQuizActive] = useState(false);
@@ -15,7 +19,6 @@ function Home() {
   const [usersVotes, setUsersVotes] = useState({});
   const [socket, setSocket] = useState(null);
   const [currentTables, setCurrentTables] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
@@ -128,7 +131,6 @@ function Home() {
     ));
   };
 
-  // Funções para navegação
   const handleNextTable = () => {
     if (currentTables < 1) setCurrentTables((prev) => prev + 1);
   };
@@ -139,142 +141,36 @@ function Home() {
 
   return (
     <div className="home-container">
-      <MusicPlayer isQuizActive={quizActive} isMuted={isMuted} />
-      <div className="controls">
-        <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
-        {quizActive ? (
-          <button className="" onClick={cancelQuiz}>
-            Cancelar
-          </button>
-        ) : (
-          <button onClick={openQuiz}>Abrir Quiz</button>
-        )}
-      </div>
-
-      <div className="vote-container">
-        {quizActive ? (
+      <div className="left-side">
+        <MusicPlayer isQuizActive={quizActive} isMuted={isMuted} />
+        <QuizControl
+          quizActive={quizActive}
+          openQuiz={openQuiz}
+          cancelQuiz={cancelQuiz}
+          toggleMute={toggleMute}
+          isMuted={isMuted}
+        />
+        <VoteCards
+          quizActive={quizActive}
+          finishQuiz={finishQuiz}
+          numberOfVotes={numberOfVotes}
+        />
+        {!quizActive && (
           <>
-            <div className="vote-cards">
-              <div
-                className="vote-card option-1 large-card"
-                onClick={() => finishQuiz("1")}
-              >
-                Opção 1
-                <br />
-                <span>{numberOfVotes.option1} votos</span>{" "}
-              </div>
-              <div
-                className="vote-card option-2 large-card"
-                onClick={() => finishQuiz("2")}
-              >
-                Opção 2
-                <br />
-                <span>{numberOfVotes.option2} votos</span>{" "}
-              </div>
-            </div>
-            {/* <div className="cancel-button-container">
-              <button className="cancel-button" onClick={cancelQuiz}>
-                Cancelar
-              </button>
-            </div> */}
+            <RankingTable
+              ranking={ranking}
+              currentTables={currentTables}
+              renderTable={renderTable}
+            />
+            <NavigationButtons
+              handlePreviousTable={handlePreviousTable}
+              handleNextTable={handleNextTable}
+              currentTables={currentTables}
+            />
           </>
-        ) : (
-          <div className="open-quiz minimized" onClick={openQuiz}>
-            Abrir Quiz
-          </div>
         )}
       </div>
-
-      {!quizActive && (
-        <div className="ranking-container">
-          <h3 className="ranking-title">Ranking dos Participantes</h3>
-
-          {/* Setas de Navegação */}
-          <div className="navigation-buttons">
-            <button
-              onClick={handlePreviousTable}
-              disabled={currentTables === 0}
-            >
-              {"<"}
-            </button>
-            <button onClick={handleNextTable} disabled={currentTables === 1}>
-              {">"}
-            </button>
-          </div>
-
-          <div
-            className={`tables-container ${isTransitioning ? "hidden" : ""}`}
-          >
-            {currentTables === 0 ? (
-              <>
-                <table className="ranking-table first-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(0, 10)}</tbody>
-                </table>
-                <table className="ranking-table first-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(10, 20)}</tbody>
-                </table>
-                <table className="ranking-table first-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(20, 30)}</tbody>
-                </table>
-              </>
-            ) : (
-              <>
-                <table className="ranking-table second-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(30, 40)}</tbody>
-                </table>
-                <table className="ranking-table second-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(40, 50)}</tbody>
-                </table>
-                <table className="ranking-table second-set">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Usuário</th>
-                      <th>Pontos</th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderTable(50, 60)}</tbody>
-                </table>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      <div className="right-side"></div>
     </div>
   );
 }
