@@ -19,7 +19,6 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
 
   const [currentSongs, setCurrentSongs] = useState(defaultSongs);
 
-  // Tocar música aleatória
   const playRandomSong = () => {
     const randomIndex = Math.floor(Math.random() * currentSongs.length);
     if (audioRef.current) {
@@ -29,7 +28,6 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
     }
   };
 
-  // Atualizar a lista de músicas ao alternar o estado do quiz
   useEffect(() => {
     if (isQuizActive) {
       setCurrentSongs(quizSongs);
@@ -38,16 +36,14 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
     }
   }, [isQuizActive]);
 
-  // Tocar música ao montar ou quando a lista de músicas mudar
   useEffect(() => {
     playRandomSong();
 
     if (audioRef.current) {
-      audioRef.current.onended = playRandomSong; // Tocar outra música quando a atual terminar
+      audioRef.current.onended = playRandomSong;
     }
   }, [currentSongs]);
 
-  // Controle de mute
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = isMuted;

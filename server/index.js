@@ -98,7 +98,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
 });
 
-// Inicia o servidor HTTP
 httpServer.listen(port, () => {
   console.log(`Server listening on port: ${port}`);
 });
