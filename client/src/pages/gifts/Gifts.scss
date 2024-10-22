@@ -1,3 +1,7 @@
+body {
+  background: black;
+}
+
 .gifts-container {
   display: flex;
   justify-content: space-between;
@@ -16,14 +20,53 @@ h2 {
   margin-bottom: 15px;
 }
 
+/* Seção de notificações */
 .gifts-notifications {
-  background-color: black;
+  background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
 }
 
 .top-gift-givers {
-  background-color: black;
+  background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
+}
+
+.top-gift-givers table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.top-gift-givers th,
+.top-gift-givers td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.top-gift-givers th {
+  background-color: #333;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.donor-info {
+  display: flex;
+  align-items: center;
+}
+
+/* Exemplo de imagem de perfil padrão */
+img[src="default-profile.png"] {
+  background-color: gray;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }

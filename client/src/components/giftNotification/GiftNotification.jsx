@@ -1,29 +1,75 @@
 import React, { useState, useEffect } from "react";
+import "./GiftNotification.scss";
 
 function GiftNotification({ gifts }) {
   const [giftList, setGiftList] = useState([]);
 
   useEffect(() => {
-    if (gifts.length > 0) {
-      setGiftList((prevGifts) => [gifts[gifts.length - 1], ...prevGifts]);
-    }
+    const now = Date.now();
+
+    // Verifica se o presente já está na lista para evitar duplicatas
+    const newGifts = gifts.map((gift) => ({
+      ...gift,
+      receivedAt: now,
+    }));
+
+    setGiftList((prevGifts) => {
+      const updatedGiftList = [...prevGifts];
+
+      // Adiciona apenas presentes que não estão na lista
+      newGifts.forEach((newGift) => {
+        const isDuplicate = updatedGiftList.some(
+          (gift) =>
+            gift.userId === newGift.userId && gift.giftName === newGift.giftName
+        );
+
+        if (!isDuplicate) {
+          updatedGiftList.push(newGift);
+        }
+      });
+
+      return updatedGiftList;
+    });
   }, [gifts]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = Date.now();
+      setGiftList((prevGiftList) =>
+        prevGiftList.map((gift) => {
+          if (now - gift.receivedAt > 3000) {
+            return { ...gift, expired: true };
+          }
+          return gift;
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="gift-notification">
-      {giftList.slice(0, 10).map((gift, index) => (
-        <div key={index} className="gift-item">
-          <img src={gift.profilePictureUrl} alt="profile" />
-          <span>
-            {gift.username} enviou {gift.giftCount}x {gift.giftName}!
-          </span>
-          <img
-            className="gift-icon"
-            src={gift.giftPictureUrl}
-            alt={gift.giftName}
-          />
-        </div>
-      ))}
+      {giftList
+        .slice()
+        .reverse()
+        .slice(0, 10)
+        .map((gift, index) => (
+          <div
+            key={index}
+            className={`gift-item ${gift.expired ? "expired" : ""}`}
+          >
+            <img src={gift.profilePictureUrl} alt="profile" />
+            <span>
+              {gift.username} enviou {gift.giftCount}x {gift.giftName}!
+            </span>
+            <img
+              className="gift-icon"
+              src={gift.giftPictureUrl}
+              alt={gift.giftName}
+            />
+          </div>
+        ))}
     </div>
   );
 }

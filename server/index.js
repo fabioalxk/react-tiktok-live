@@ -62,7 +62,9 @@ const startTikTokConnection = () => {
     });
 
   tiktokConnection.on("gift", (data) => {
-    console.log(`${data.uniqueId} enviou um presente: ${data.giftName}`);
+    if (data.diamondCount > 1) {
+      console.log(`${data}`);
+    }
 
     io.emit("gift", {
       userId: data.userId,
@@ -76,7 +78,7 @@ const startTikTokConnection = () => {
   });
 };
 
-// startTikTokConnection();
+startTikTokConnection();
 
 io.on("connection", (socket) => {
   console.log("Client connected to Socket.IO");
@@ -114,6 +116,13 @@ app.get("/emit-gifts", (req, res) => {
   }
 
   return res.send("Emits de presentes enviados.");
+});
+
+app.get("/emit-gifts-1", (req, res) => {
+  const randomGift = generateRandomGift(); //
+  io.emit("gift", randomGift);
+
+  return res.send("Emit de 1 presente enviado.");
 });
 
 app.use(express.static(path.join(__dirname, "../client/dist")));

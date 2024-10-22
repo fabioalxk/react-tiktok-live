@@ -15,7 +15,6 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
     "/assets/songs/crucial/song1.mp3",
     "/assets/songs/crucial/song2.mp3",
     "/assets/songs/crucial/showMilhao.mp3",
-    "/assets/songs/crucial/suspense.mp3",
   ];
 
   const [currentSongs, setCurrentSongs] = useState(defaultSongs);
