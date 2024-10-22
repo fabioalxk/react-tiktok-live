@@ -13,7 +13,6 @@ const MusicPlayer = ({ isQuizActive, isMuted }) => {
 
   const quizSongs = [
     "/assets/songs/crucial/song1.mp3",
-    "/assets/songs/crucial/song2.mp3",
     "/assets/songs/crucial/showMilhao.mp3",
   ];
 

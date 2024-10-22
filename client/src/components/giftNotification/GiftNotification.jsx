@@ -7,7 +7,6 @@ function GiftNotification({ gifts }) {
   useEffect(() => {
     const now = Date.now();
 
-    // Verifica se o presente já está na lista para evitar duplicatas
     const newGifts = gifts.map((gift) => ({
       ...gift,
       receivedAt: now,
@@ -16,7 +15,6 @@ function GiftNotification({ gifts }) {
     setGiftList((prevGifts) => {
       const updatedGiftList = [...prevGifts];
 
-      // Adiciona apenas presentes que não estão na lista
       newGifts.forEach((newGift) => {
         const isDuplicate = updatedGiftList.some(
           (gift) =>
@@ -37,7 +35,7 @@ function GiftNotification({ gifts }) {
       const now = Date.now();
       setGiftList((prevGiftList) =>
         prevGiftList.map((gift) => {
-          if (now - gift.receivedAt > 3000) {
+          if (now - gift.receivedAt > 30000) {
             return { ...gift, expired: true };
           }
           return gift;
