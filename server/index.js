@@ -41,6 +41,7 @@ if (!liveId) {
 let tiktokConnection = null;
 
 const startTikTokConnection = () => {
+  console.log("liveId", liveId);
   tiktokConnection = new WebcastPushConnection(liveId);
 
   tiktokConnection

@@ -4,12 +4,15 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
 import store from "./redux/store";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <Provider store={store} redirectUri={window.location.origin}>
-      <Toaster />
-      <PageRoutes />
+      <BrowserRouter>
+        <Toaster />
+        <PageRoutes />
+      </BrowserRouter>
     </Provider>
   );
 }
