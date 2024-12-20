@@ -11,7 +11,7 @@ import { generateRandomGift } from "./randomGifts.js";
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const httpServer = createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +22,8 @@ app.use(
     methods: ["GET", "POST"],
   })
 );
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const io = new Server(httpServer, {
   cors: {
@@ -31,17 +33,16 @@ const io = new Server(httpServer, {
   transports: ["websocket"],
 });
 
-const liveId = process.env.LIVE_ID;
-
-if (!liveId) {
-  console.error("❌ Error: LIVE_ID is missing from env variables.");
-  process.exit(1);
-}
-
+let liveId = process.env.LIVE_ID; // Inicialmente pega do .env
 let tiktokConnection = null;
 
 const startTikTokConnection = () => {
-  console.log("liveId", liveId);
+  if (tiktokConnection) {
+    console.log(`Desconectando da conexão anterior com LIVE_ID: ${liveId}`);
+    tiktokConnection.disconnect();
+  }
+
+  console.log(`Conectando ao TikTok Live com LIVE_ID: ${liveId}`);
   tiktokConnection = new WebcastPushConnection(liveId);
 
   const reconnect = (attempt = 1) => {
@@ -49,12 +50,11 @@ const startTikTokConnection = () => {
 
     tiktokConnection
       .connect()
-      .then((state) => {
-        console.log(`Reconectado ao TikTok Live: ${liveId}`);
+      .then(() => {
+        console.log(`Conectado ao TikTok Live: ${liveId}`);
 
         tiktokConnection.on("chat", (data) => {
           console.log(`${data.uniqueId} escreve: ${data.comment}`);
-
           io.emit("chat", {
             uniqueId: data.uniqueId,
             comment: data.comment,
@@ -103,6 +103,45 @@ const startTikTokConnection = () => {
 
 startTikTokConnection();
 
+// Rota para o painel de administração
+app.get("/admin", (req, res) => {
+  res.send(`
+    <html>
+      <body>
+        <h1>Admin - Alterar LIVE_ID</h1>
+        <form action="/update-live-id" method="POST">
+          <label for="liveId">Novo LIVE_ID:</label>
+          <input type="text" id="liveId" name="liveId" required>
+          <button type="submit">Atualizar</button>
+        </form>
+      </body>
+    </html>
+  `);
+});
+
+// Rota para atualizar o LIVE_ID
+app.post("/update-live-id", (req, res) => {
+  const newLiveId = req.body.liveId;
+
+  if (!newLiveId) {
+    return res.status(400).send("LIVE_ID não pode ser vazio.");
+  }
+
+  liveId = newLiveId;
+  console.log(`Novo LIVE_ID definido: ${liveId}`);
+  startTikTokConnection();
+
+  res.send(`
+    <html>
+      <body>
+        <h1>LIVE_ID atualizado com sucesso!</h1>
+        <p>Agora conectado ao LIVE_ID: ${liveId}</p>
+        <a href="/admin">Voltar</a>
+      </body>
+    </html>
+  `);
+});
+
 io.on("connection", (socket) => {
   console.log("Client connected to Socket.IO");
 
@@ -111,43 +150,13 @@ io.on("connection", (socket) => {
   });
 });
 
-const users = Array.from({ length: 500 }, (_, i) => ({
-  uniqueId: `user${i + 1}`,
-}));
-
-const getRandomComment = () => {
-  return Math.random() < 0.5 ? "1" : "2";
-};
-
+// Rotas de exemplo
 app.get("/emit", (req, res) => {
-  users.forEach((user) => {
-    const randomComment = getRandomComment();
-
-    io.emit("chat", {
-      uniqueId: user.uniqueId,
-      comment: randomComment,
-    });
-  });
-
-  return res.send("Emits sent to 500 users.");
+  io.emit("chat", { uniqueId: "user123", comment: "Hello, world!" });
+  res.send("Emit enviado!");
 });
 
-app.get("/emit-gifts", (req, res) => {
-  for (let i = 0; i < 100; i++) {
-    const randomGift = generateRandomGift();
-    io.emit("gift", randomGift);
-  }
-
-  return res.send("Emits de presentes enviados.");
-});
-
-app.get("/emit-gifts-1", (req, res) => {
-  const randomGift = generateRandomGift();
-  io.emit("gift", randomGift);
-
-  return res.send("Emit de 1 presente enviado.");
-});
-
+// Servindo arquivos estáticos
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("*", (req, res) => {
@@ -155,5 +164,5 @@ app.get("*", (req, res) => {
 });
 
 httpServer.listen(port, () => {
-  console.log(`Server listening on port: ${port}. http://localhost:3000`);
+  console.log(`Server listening on port: ${port}. http://localhost:${port}`);
 });
