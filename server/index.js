@@ -34,7 +34,7 @@ const io = new Server(httpServer, {
 const liveId = process.env.LIVE_ID;
 
 if (!liveId) {
-  console.error("Error: LIVE_ID is missing from env variables.");
+  console.error("❌ Error: LIVE_ID is missing from env variables.");
   process.exit(1);
 }
 
@@ -44,39 +44,61 @@ const startTikTokConnection = () => {
   console.log("liveId", liveId);
   tiktokConnection = new WebcastPushConnection(liveId);
 
-  tiktokConnection
-    .connect()
-    .then((state) => {
-      console.log(`Connected to a live in TikTok: ${liveId}`);
+  const reconnect = (attempt = 1) => {
+    console.log(`Tentando reconectar... tentativa ${attempt}`);
 
-      tiktokConnection.on("chat", (data) => {
-        console.log(`${data.uniqueId} escreve: ${data.comment}`);
+    tiktokConnection
+      .connect()
+      .then((state) => {
+        console.log(`Reconectado ao TikTok Live: ${liveId}`);
 
-        io.emit("chat", {
-          uniqueId: data.uniqueId,
-          comment: data.comment,
+        tiktokConnection.on("chat", (data) => {
+          console.log(`${data.uniqueId} escreve: ${data.comment}`);
+
+          io.emit("chat", {
+            uniqueId: data.uniqueId,
+            comment: data.comment,
+          });
         });
+
+        tiktokConnection.on("gift", (data) => {
+          if (data.diamondCount > 1) {
+            console.log(`${data}`);
+          }
+
+          io.emit("gift", {
+            userId: data.userId,
+            username: data.uniqueId,
+            giftName: data.giftName,
+            giftCount: data.repeatCount,
+            profilePictureUrl: data.profilePictureUrl,
+            giftPictureUrl: data.giftPictureUrl,
+            diamondCount: data.diamondCount,
+          });
+        });
+
+        tiktokConnection.on("disconnected", () => {
+          console.error("❌ Desconectado do TikTok Live.");
+          setTimeout(() => reconnect(attempt + 1), 5000);
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `❌ Erro ao reconectar ao TikTok Live:`,
+          "status: " + err?.response?.status
+        );
+
+        if (attempt < 5) {
+          setTimeout(() => reconnect(attempt + 1), 5000);
+        } else {
+          console.error(
+            "❌❌ Não foi possível reconectar após várias tentativas."
+          );
+        }
       });
-    })
-    .catch((err) => {
-      console.error("Erro ao conectar ao TikTok Live:", err);
-    });
+  };
 
-  tiktokConnection.on("gift", (data) => {
-    if (data.diamondCount > 1) {
-      console.log(`${data}`);
-    }
-
-    io.emit("gift", {
-      userId: data.userId,
-      username: data.uniqueId,
-      giftName: data.giftName,
-      giftCount: data.repeatCount,
-      profilePictureUrl: data.profilePictureUrl,
-      giftPictureUrl: data.giftPictureUrl,
-      diamondCount: data.diamondCount,
-    });
-  });
+  reconnect();
 };
 
 startTikTokConnection();
@@ -120,7 +142,7 @@ app.get("/emit-gifts", (req, res) => {
 });
 
 app.get("/emit-gifts-1", (req, res) => {
-  const randomGift = generateRandomGift(); //
+  const randomGift = generateRandomGift();
   io.emit("gift", randomGift);
 
   return res.send("Emit de 1 presente enviado.");
@@ -133,5 +155,5 @@ app.get("*", (req, res) => {
 });
 
 httpServer.listen(port, () => {
-  console.log(`Server listening on port: ${port}`);
+  console.log(`Server listening on port: ${port}. http://localhost:3000`);
 });
